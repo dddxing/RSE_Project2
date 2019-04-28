@@ -38,7 +38,7 @@ bool handle_drive_request(ball_chaser::DriveToTarget::Request& req, ball_chaser:
 
 
 	// Wait 3 sec 
-	ros::Duration(3).sleep();
+	//ros::Duration(2).sleep();
 
 	res.msg_feedback = "Wheel joint angle set linear_x: " + std::to_string(motor_command.linear.x) + ",angular_z: " + std::to_string(motor_command.angular.z);
 	ROS_INFO_STREAM(res.msg_feedback);

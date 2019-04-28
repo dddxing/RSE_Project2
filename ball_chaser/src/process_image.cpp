@@ -32,11 +32,12 @@ void process_image_callback(const sensor_msgs::Image img)
 		for (int j = 0; j < img.step; j += 3)
 		{
 			
-			if (img.data[j+offset] == 255 && img.data[j+1+offset] == 255 && img.data[j+2+offset] == 255)
+			if ((img.data[j+offset] == 255) && (img.data[j+1+offset] == 255) && (img.data[j+2+offset] == 255))
 			{
 				white_pixel_found = true;
+				ROS_INFO_STREAM("FOUND\n");
 				white_pixel_location = j/3;
-				break;
+				
 			}			
 
 		}
@@ -47,18 +48,31 @@ void process_image_callback(const sensor_msgs::Image img)
 	
 	if (white_pixel_found == true) 
 	{
-		if (0 < white_pixel_location <= img.width/3)
+		if (white_pixel_location <= img.width/3)
+		{
+			ROS_INFO_STREAM("LEFT\n");
 	    	drive_robot(0, 0.3);
+		}
 
-	    else if (img.width/3 < white_pixel_location <= (2/3) * img.width)
+
+	    else if ((img.width/3 < white_pixel_location) && (white_pixel_location <= (2/3) * img.width))
+	    {
+	    	ROS_INFO_STREAM("MIDDLE\n");
 	        drive_robot(0.5, 0);
+	    }
 
 	    else //((2/3) * img.width < white_pixel_location <= img.width)
+	    {
+	    	ROS_INFO_STREAM("RIGHT\n");
 	        drive_robot(0, -0.3);
+	    }
 	}
 
 	if (white_pixel_found == false)
+	{
+		ROS_INFO_STREAM("NO\n");
 		drive_robot(0,0);
+	}
 
 }
 
