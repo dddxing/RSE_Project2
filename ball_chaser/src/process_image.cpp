@@ -21,7 +21,7 @@ void drive_robot(float lin_x, float ang_z){
 void process_image_callback(const sensor_msgs::Image img)
 {
 	bool white_pixel_found = false;
-	int white_pixel_location;
+	float white_pixel_location;
 	int white_pixel = 255;
 	int offset;
 
@@ -37,6 +37,9 @@ void process_image_callback(const sensor_msgs::Image img)
 				white_pixel_found = true;
 				ROS_INFO_STREAM("FOUND\n");
 				white_pixel_location = j/3;
+				ROS_INFO_STREAM(img.width);
+				ROS_INFO_STREAM(white_pixel_location);
+				break;
 				
 			}			
 
@@ -48,20 +51,20 @@ void process_image_callback(const sensor_msgs::Image img)
 	
 	if (white_pixel_found == true) 
 	{
-		if (white_pixel_location <= img.width/3)
+		if (white_pixel_location < img.width/3)
 		{
 			ROS_INFO_STREAM("LEFT\n");
 	    	drive_robot(0, 0.3);
 		}
 
 
-	    else if ((img.width/3 < white_pixel_location) && (white_pixel_location <= (2/3) * img.width))
+	    else if ((img.width/3 <= white_pixel_location) && (white_pixel_location <= ((2 * img.width))/3))
 	    {
 	    	ROS_INFO_STREAM("MIDDLE\n");
 	        drive_robot(0.5, 0);
 	    }
 
-	    else //((2/3) * img.width < white_pixel_location <= img.width)
+	    else //if (((2/3) * img.width < white_pixel_location) && (white_pixel_location <= img.width)
 	    {
 	    	ROS_INFO_STREAM("RIGHT\n");
 	        drive_robot(0, -0.3);
